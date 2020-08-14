@@ -14,8 +14,8 @@ class LDPC(LinearCode):
 	Methods
 	-------
 	from_params(n, d_v, d_c)
-		Init LDPC by length, column weight and row weight
-		
+		Init LDPC by size of H, column weight and row weight
+
 	"""
 
 	def __init__(self, G: np.ndarray, H: np.ndarray):       

@@ -12,7 +12,7 @@ class LinearCode:
 	Attributes
 	----------
 	G : numpy.ndarray
-	    coding matrix
+	    generator matrix
 	H : numpy.ndarray
 		parity-check matrix
 

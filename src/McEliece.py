@@ -79,21 +79,23 @@ class McEliece:
         z = [1 for _ in range(errors_num)] + [0 for _  in range(self.n - errors_num)]
         z = np.array(z, dtype=int)
         np.random.shuffle(z)
-        
+
         res = ((word @ self.public_key[0] % 2) + z) % 2
             
         return res
     
-    def decrypt(self, codeword):            
-        c = codeword @ np.linalg.inv(self.P) % 2
+    def decrypt(self, codeword):
+        A, invP = gaussjordan(self.P, True)
+
+        c = codeword @ invP % 2
         c = np.array(c, dtype=int)
         
         d = self.code.decode(c)
         m = self.code.get_message(d)
 
-        _, inv = gaussjordan(self.S, True)
+        _, invS = gaussjordan(self.S, True)
         
-        res = m @ inv % 2
+        res = m @ invS % 2
         res = np.array(res, dtype=int)
         
         return res
@@ -112,18 +114,18 @@ class McEliece:
 """
 # EXAMPLE USAGE
 
-from QC_LDPC import QC_LDPC
+from LDPC import LDPC
 
-n = 200
-p = 100
-w = 8
+n = 300
+d_v = 6
+d_c = 10
 
-qc_ldpc = QC_LDPC.from_params(n, p, w)
+ldpc = LDPC.from_params(n, d_v, d_c)
 
-word = np.random.randint(2, size=p)
+word = np.random.randint(2, size=ldpc.getG().shape[0])
 print("word:", word)
 
-crypto = McEliece.from_linear_code(qc_ldpc, 8)
+crypto = McEliece.from_linear_code(ldpc, 12)
 
 encrypted = crypto.encrypt(word)
 print("encrypted:", encrypted)
