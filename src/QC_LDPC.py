@@ -29,7 +29,7 @@ class QC_LDPC(LinearCode):
         assert n % p == 0, "p must be delimeter of n"
         
         n0 = n // p
-        assert w > n0, "not enough code weight"
+        assert w > 2*n0, "not enough code weight"
         
         fine = False
         
@@ -45,7 +45,7 @@ class QC_LDPC(LinearCode):
             for i in range(n0):
                 circ = vector[i*p:(i+1)*p]
                 
-                if sum(circ) < 1:
+                if sum(circ) < 2:
                     inverse_block = None
                     break
         
@@ -65,14 +65,11 @@ class QC_LDPC(LinearCode):
         
         # put inverse block on last position
         blocks[inverse_block_position], blocks[n0-1] = blocks[n0-1], blocks[inverse_block_position]
-        
-        for i in range(n0):
-            blocks[i] = blocks[i] @ inverse_block % 2
-        
         H = np.concatenate(blocks, axis=1)
 
         for i in range(n0):
-            blocks[i] = blocks[i].T
+            blocks[i] = blocks[i] @ inverse_block % 2
+            blocks[i] = blocks[i].T            
 
         Ht = np.concatenate(blocks[:n0-1], axis=0)
         G = np.concatenate((np.eye(Ht.shape[0], dtype=int), Ht), axis=1)
@@ -105,13 +102,13 @@ word = np.random.randint(2, size=p)
 encoded = qc_ldpc.encode(word)
 
 # error vector size n with t or less errors
-errors_num = 8
+errors_num = 2
 e = [1 for _ in range(errors_num)] + [0 for _  in range(n - errors_num)]
 e = np.array(e)
 np.random.shuffle(e)
 
 corrupted = (encoded + e) % 2
-decoded = qc_ldpc.decode(np.copy(encoded))
+decoded = qc_ldpc.decode(np.copy(corrupted))
 decoded = qc_ldpc.get_message(decoded)
 
 assert (decoded == word).all()
