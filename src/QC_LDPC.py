@@ -92,13 +92,13 @@ class QC_LDPC(LinearCode):
 """
 # EXAMPLE USAGE:
 
-n = 200
-p = 100
-w = 8
+n = 226
+p = 113
+w = 15
 
 qc_ldpc = QC_LDPC.from_params(n, p, w)
 
-word = np.random.randint(2, size=p)
+word = np.random.randint(2, size=qc_ldpc.getG().shape[0])
 encoded = qc_ldpc.encode(word)
 
 # error vector size n with t or less errors
