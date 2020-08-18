@@ -97,7 +97,9 @@ def bit_flipping(H, c, maxiter=200):
         
         # max depth exceeded -> exit with warning
         if iteration == 0:
-            warnings.warn("Bit flipping failed with {} iterations".format(maxiter))
+            message = "Bit flipping failed with {} iterations.".format(maxiter)
+            message += " You may need to increase this number."
+            warnings.warn(message)
             return
         
         # calculate syndrome

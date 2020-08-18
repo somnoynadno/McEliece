@@ -73,9 +73,9 @@ class McEliece:
         return cls(code, S, P, t)
         
     def encrypt(self, word):
-        errors_num = randint(1, self.t)
+        errors_num = self.t
         
-        # error vector size n with t or less errors
+        # error vector size n with t errors
         z = [1 for _ in range(errors_num)] + [0 for _  in range(self.n - errors_num)]
         z = np.array(z, dtype=int)
         np.random.shuffle(z)
