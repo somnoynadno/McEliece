@@ -1,9 +1,15 @@
 import numpy as np
 
 from random import randint
+from math import factorial, log
 
 from LinearCode import LinearCode
 from utils import gaussjordan
+
+
+def combinations(n, k):
+    # Simple (n, k) combinations calculation
+    return factorial(n) // (factorial(k) * factorial(n - k))
 
 
 class McEliece:
@@ -39,6 +45,9 @@ class McEliece:
 
     decrypt(codeword)
         Decryption with private key
+
+    ISD_security_level()
+        Estimate security level for ISD attack (in bits)
 
     _get_non_singular_matrix(k)
         Little helper to get inversable matrix (size k)
@@ -99,6 +108,12 @@ class McEliece:
         res = np.array(res, dtype=int)
         
         return res
+
+    def ISD_security_level(self):
+        k, n = self.code.getG().shape
+        print(k, n)
+        return int(log(combinations(n, self.t) // combinations(n - k, self.t), 2))
+
     
     @staticmethod
     def _get_non_singular_random_matrix(k):

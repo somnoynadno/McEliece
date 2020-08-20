@@ -31,13 +31,20 @@ def gaussjordan(X, change=0):
         P = np.identity(m).astype(int)
 
     pivot_old = -1
+
+    # for each column
     for j in range(n):
+        # take column
         filtre_down = A[pivot_old+1:m, j]
+        # find first 1 index in that column
         pivot = np.argmax(filtre_down)+pivot_old+1
 
+        # if it is really 1 on that index
         if A[pivot, j]:
             pivot_old += 1
+            # if it is not previous index
             if pivot_old != pivot:
+                # swap rows
                 aux = np.copy(A[pivot, :])
                 A[pivot, :] = A[pivot_old, :]
                 A[pivot_old, :] = aux
@@ -46,10 +53,13 @@ def gaussjordan(X, change=0):
                     P[pivot, :] = P[pivot_old, :]
                     P[pivot_old, :] = aux
 
+            # for each row
             for i in range(m):
+                # if found 1 in intersection
                 if i != pivot_old and A[i, j]:
                     if change:
                         P[i, :] = abs(P[i, :]-P[pivot_old, :])
+                    # put binary diff in a row
                     A[i, :] = abs(A[i, :]-A[pivot_old, :])
 
         if pivot_old == m-1:
