@@ -54,7 +54,7 @@ class LinearCode:
 	def syndrome(self, codeword):
 		return (codeword @ self.H.T) % 2 
 
-	def guess_code_max_error(self, iters=100, confidence=0.999):
+	def guess_code_max_error(self, iters=100, confidence=0.99):
 		k, n = self.G.shape
 
 		t = 1
